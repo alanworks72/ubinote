@@ -150,3 +150,35 @@ class S3Service:
                 "success": False,
                 "message": f"Unexpected error: {e}"
             }
+    
+    def delete_note(self, filename: str) -> dict:
+        try:
+            self.s3_client.delete_object(
+                Bucket=self.bucket_name,
+                Key=filename
+            )
+            
+            return {
+                "success": True,
+                "message": "Note deleted successfully"
+            }
+        except NoCredentialsError:
+            return {
+                "success": False,
+                "message": "AWS credentials not found"
+            }
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'NoSuchKey':
+                return {
+                    "success": False,
+                    "message": "Note not found"
+                }
+            return {
+                "success": False,
+                "message": f"AWS S3 error: {e}"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"Unexpected error: {e}"
+            }

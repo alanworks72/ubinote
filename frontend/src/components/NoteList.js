@@ -38,6 +38,32 @@ const NoteList = ({ onNoteSelect, selectedNote }) => {
     }
   };
 
+  const handleDeleteNote = async (note, event) => {
+    event.stopPropagation();
+    
+    if (!note || !note.title || !note.filename) {
+      setError('Invalid note data');
+      return;
+    }
+    
+    if (!window.confirm(`"${note.title}" 노트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`)) {
+      return;
+    }
+
+    try {
+      setError(null);
+      await noteAPI.deleteNote(note.filename);
+      
+      if (selectedNote === note.filename) {
+        onNoteSelect(null);
+      }
+      
+      await loadNotes();
+    } catch (err) {
+      setError(`Failed to delete note: ${err.message}`);
+    }
+  };
+
   const formatDate = (dateString) => {
     try {
       return new Date(dateString).toLocaleDateString('ko-KR', {
@@ -86,17 +112,26 @@ const NoteList = ({ onNoteSelect, selectedNote }) => {
           </div>
         ) : (
           <ul className="notes-list">
-            {notes.map((note) => (
+            {notes.filter(note => note && note.filename && note.title).map((note) => (
               <li 
                 key={note.filename}
                 className={`note-item ${selectedNote === note.filename ? 'selected' : ''}`}
                 onClick={() => handleNoteClick(note)}
               >
-                <div className="note-title">{note.title}</div>
-                <div className="note-meta">
-                  <span className="note-date">{formatDate(note.last_modified)}</span>
-                  <span className="note-size">{formatFileSize(note.size)}</span>
+                <div className="note-content">
+                  <div className="note-title">{note.title || 'Untitled'}</div>
+                  <div className="note-meta">
+                    <span className="note-date">{formatDate(note.last_modified)}</span>
+                    <span className="note-size">{formatFileSize(note.size || 0)}</span>
+                  </div>
                 </div>
+                <button 
+                  className="delete-button"
+                  onClick={(event) => handleDeleteNote(note, event)}
+                  title={`Delete "${note.title || 'Untitled'}"`}
+                >
+                  ×
+                </button>
               </li>
             ))}
           </ul>

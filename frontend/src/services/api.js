@@ -47,6 +47,17 @@ export const noteAPI = {
     }
   },
 
+  deleteNote: async (filename) => {
+    try {
+      const response = await apiClient.delete(`/api/delete/${filename}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.detail || 'Failed to delete note'
+      );
+    }
+  },
+
   healthCheck: async () => {
     try {
       const response = await apiClient.get('/health');

@@ -78,6 +78,9 @@
   border-bottom: 1px solid #f3f4f6;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .note-item:hover {
@@ -91,6 +94,11 @@
 .note-item.selected {
   background-color: #eff6ff;
   border-left: 3px solid #3b82f6;
+}
+
+.note-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .note-title {
@@ -119,4 +127,38 @@
   padding: 2px 6px;
   border-radius: 3px;
   font-size: 11px;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  transition: all 0.2s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.note-item:hover .delete-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.delete-button:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.delete-button:active {
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
