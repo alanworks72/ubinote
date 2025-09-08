@@ -1,0 +1,45 @@
+# Environment variables
+.env
+
+# Sensitive deployment information (keep local only)
+DEPLOYMENT.md
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Production builds
+/frontend/build
+/backend/dist
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+.docker/
+
+# Coverage reports
+coverage/
+*.cover
+.coverage
+
+# Testing
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.temp

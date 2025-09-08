@@ -1,0 +1,79 @@
+.note-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.editor-header {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: #fafafa;
+  border-radius: 8px 8px 0 0;
+}
+
+.title-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.title-input:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.save-button {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.save-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.content-textarea {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  resize: none;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  background-color: white;
+  border-radius: 0 0 8px 8px;
+}
+
+.content-textarea:focus {
+  outline: none;
+}
+
+.content-textarea:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+}

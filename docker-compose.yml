@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME:-dev-jhpark}
+      - AWS_REGION=${AWS_REGION:-ap-northeast-2}
+      - TZ=Asia/Seoul
+    volumes:
+      - ./backend/app:/app/app
+      - ~/.aws:/root/.aws:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8000}
+      - TZ=Asia/Seoul
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  default:
+    name: ubinote-network
