@@ -44,7 +44,7 @@ async def upload_note(note: NoteUpload):
     if not note.content.strip():
         raise HTTPException(status_code=400, detail="Note content is required")
     
-    result = s3_service.upload_note(note.title, note.content)
+    result = s3_service.upload_note(note.title, note.content, note.existing_filename)
     
     if result["success"]:
         return JSONResponse(

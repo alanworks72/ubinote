@@ -11,11 +11,12 @@ const apiClient = axios.create({
 });
 
 export const noteAPI = {
-  uploadNote: async (title, content) => {
+  uploadNote: async (title, content, existingFilename = null) => {
     try {
       const response = await apiClient.post('/api/upload', {
         title,
         content,
+        existing_filename: existingFilename,
       });
       return response.data;
     } catch (error) {

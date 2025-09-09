@@ -19,15 +19,18 @@ class S3Service:
             region_name=self.aws_region
         )
     
-    def upload_note(self, title: str, content: str) -> dict:
+    def upload_note(self, title: str, content: str, existing_filename: str = None) -> dict:
         try:
-            current_date = datetime.now()
-            date_folder = current_date.strftime("%Y-%m-%d")
-            
-            safe_title = re.sub(r'[^\w\s-]', '', title).strip()
-            safe_title = re.sub(r'[\s]+', '_', safe_title)
-            filename = f"{safe_title}.md"
-            s3_key = f"ubinote/{date_folder}/{filename}"
+            if existing_filename:
+                # Update existing file
+                s3_key = existing_filename
+            else:
+                # Create new file with unique timestamp-based filename
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                safe_title = re.sub(r'[^\w\s-]', '', title).strip()
+                safe_title = re.sub(r'[\s]+', '_', safe_title)
+                filename = f"{timestamp}_{safe_title}.md"
+                s3_key = f"ubinote/{filename}"
             
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
@@ -68,18 +71,24 @@ class S3Service:
             if 'Contents' in response:
                 for obj in response['Contents']:
                     if obj['Key'].endswith('.md'):
-                        # Extract filename from full path
+                        # Extract filename from full path (ubinote/filename.md)
                         filename_only = obj['Key'].split('/')[-1]
-                        display_title = filename_only.replace('.md', '').replace('_', ' ')
                         
-                        # Extract date from path (ubinote/2025-09-08/filename.md)
-                        path_parts = obj['Key'].split('/')
-                        date_folder = path_parts[1] if len(path_parts) > 1 else 'unknown'
+                        # Extract display title from timestamp_title.md format
+                        if '_' in filename_only:
+                            # Remove timestamp prefix (YYYYMMDD_HHMMSS) and .md suffix
+                            parts = filename_only.replace('.md', '').split('_')
+                            if len(parts) >= 3 and parts[0].isdigit() and len(parts[0]) == 8 and parts[1].isdigit() and len(parts[1]) == 6:
+                                # This is timestamp format: remove first two parts (date and time)
+                                display_title = '_'.join(parts[2:]).replace('_', ' ')
+                            else:
+                                display_title = filename_only.replace('.md', '').replace('_', ' ')
+                        else:
+                            display_title = filename_only.replace('.md', '').replace('_', ' ')
                         
                         notes.append({
                             "filename": obj['Key'],
                             "title": display_title,
-                            "date_folder": date_folder,
                             "last_modified": obj['LastModified'].isoformat(),
                             "size": obj['Size']
                         })
@@ -118,7 +127,18 @@ class S3Service:
             
             # Extract title from full path
             filename_only = filename.split('/')[-1]
-            display_title = filename_only.replace('.md', '').replace('_', ' ')
+            
+            # Extract display title from timestamp_title.md format
+            if '_' in filename_only:
+                # Remove timestamp prefix (YYYYMMDD_HHMMSS) and .md suffix
+                parts = filename_only.replace('.md', '').split('_')
+                if len(parts) >= 3 and parts[0].isdigit() and len(parts[0]) == 8 and parts[1].isdigit() and len(parts[1]) == 6:
+                    # This is timestamp format: remove first two parts (date and time)
+                    display_title = '_'.join(parts[2:]).replace('_', ' ')
+                else:
+                    display_title = filename_only.replace('.md', '').replace('_', ' ')
+            else:
+                display_title = filename_only.replace('.md', '').replace('_', ' ')
             
             return {
                 "success": True,
