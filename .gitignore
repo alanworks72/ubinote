@@ -1,6 +1,6 @@
 # Environment variables
 .env
-.claude/
+.claude/settings.local.json
 
 # Sensitive deployment information (keep local only)
 DEPLOYMENT.md

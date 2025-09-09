@@ -8,7 +8,15 @@
       "Bash(dig:*)",
       "Bash(sudo certbot:*)",
       "Bash(sudo docker-compose:*)",
-      "Bash(sudo docker:*)"
+      "Bash(sudo docker:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker-compose restart:*)",
+      "Bash(curl:*)",
+      "Bash(python test:*)",
+      "Bash(node test_frontend_behavior.js)",
+      "Bash(docker-compose logs:*)",
+      "Bash(docker-compose:*)"
     ],
     "deny": [],
     "ask": []
