@@ -11,11 +11,12 @@ const apiClient = axios.create({
 });
 
 export const noteAPI = {
-  uploadNote: async (title, content) => {
+  uploadNote: async (title, content, existingFilename = null) => {
     try {
       const response = await apiClient.post('/api/upload', {
         title,
         content,
+        existing_filename: existingFilename,
       });
       return response.data;
     } catch (error) {
@@ -43,6 +44,17 @@ export const noteAPI = {
     } catch (error) {
       throw new Error(
         error.response?.data?.detail || 'Failed to download note'
+      );
+    }
+  },
+
+  deleteNote: async (filename) => {
+    try {
+      const response = await apiClient.delete(`/api/delete/${filename}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.detail || 'Failed to delete note'
       );
     }
   },

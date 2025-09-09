@@ -44,7 +44,7 @@ async def upload_note(note: NoteUpload):
     if not note.content.strip():
         raise HTTPException(status_code=400, detail="Note content is required")
     
-    result = s3_service.upload_note(note.title, note.content)
+    result = s3_service.upload_note(note.title, note.content, note.existing_filename)
     
     if result["success"]:
         return JSONResponse(
@@ -91,6 +91,25 @@ async def download_note(filename: str):
                 "success": True,
                 "message": result["message"],
                 "data": result["data"]
+            }
+        )
+    else:
+        status_code = 404 if "not found" in result["message"].lower() else 500
+        raise HTTPException(status_code=status_code, detail=result["message"])
+
+@app.delete("/api/delete/{filename:path}")
+async def delete_note(filename: str):
+    if not s3_service:
+        raise HTTPException(status_code=500, detail="S3 service not configured")
+    
+    result = s3_service.delete_note(filename)
+    
+    if result["success"]:
+        return JSONResponse(
+            status_code=200,
+            content={
+                "success": True,
+                "message": result["message"]
             }
         )
     else:

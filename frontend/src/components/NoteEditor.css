@@ -16,6 +16,36 @@
   border-radius: 8px 8px 0 0;
 }
 
+.editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.save-status {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.saving-indicator {
+  color: #3b82f6;
+  animation: pulse 1s infinite;
+}
+
+.unsaved-indicator {
+  color: #f59e0b;
+}
+
+.saved-indicator {
+  color: #10b981;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 .title-input {
   flex: 1;
   padding: 8px 12px;

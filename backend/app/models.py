@@ -4,6 +4,7 @@ from typing import List, Optional
 class NoteUpload(BaseModel):
     title: str
     content: str
+    existing_filename: Optional[str] = None
 
 class NoteInfo(BaseModel):
     filename: str
